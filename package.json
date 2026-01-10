@@ -1,0 +1,120 @@
+{
+  "name": "solar-theme",
+  "displayName": "Solar Theme",
+  "description": "Smooth ombre color gradient that transitions from sunrise orange to sunset purple throughout the day",
+  "version": "0.1.0",
+  "publisher": "your-publisher-name",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/solar-theme-vscode"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Themes",
+    "Other"
+  ],
+  "keywords": [
+    "theme",
+    "sunrise",
+    "sunset",
+    "solar",
+    "dynamic",
+    "automatic",
+    "dark mode",
+    "light mode",
+    "circadian"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "solarTheme.updateNow",
+        "title": "Solar Theme: Update Theme Now"
+      },
+      {
+        "command": "solarTheme.showSunTimes",
+        "title": "Solar Theme: Show Sunrise/Sunset Times"
+      },
+      {
+        "command": "solarTheme.toggleEnabled",
+        "title": "Solar Theme: Toggle Enabled"
+      },
+      {
+        "command": "solarTheme.resetColors",
+        "title": "Solar Theme: Reset Colors to Default"
+      },
+      {
+        "command": "solarTheme.openSettings",
+        "title": "Solar Theme: Open Color Settings Panel"
+      }
+    ],
+    "configuration": {
+      "title": "Solar Theme",
+      "properties": {
+        "solarTheme.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable automatic theme switching"
+        },
+        "solarTheme.latitude": {
+          "type": "number",
+          "default": 30.35,
+          "description": "Your latitude (e.g., 30.35 for Austin, TX)"
+        },
+        "solarTheme.longitude": {
+          "type": "number",
+          "default": -97.74,
+          "description": "Your longitude (e.g., -97.74 for Austin, TX)"
+        },
+        "solarTheme.intensity": {
+          "type": "number",
+          "default": 100,
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Intensity of color changes (0-100). Higher = more vivid colors."
+        },
+        "solarTheme.updateIntervalSeconds": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 300,
+          "description": "How often to update colors (in seconds). Lower = smoother transitions."
+        },
+        "solarTheme.showNotifications": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show notification when theme changes"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "@vscode/vsce": "^2.22.0",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "suncalc": "^1.9.0"
+  }
+}
+
+
+
