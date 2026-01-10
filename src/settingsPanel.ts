@@ -6,6 +6,7 @@ export class SettingsPanel {
   private _disposables: vscode.Disposable[] = [];
   private _onColorsChanged: (colors: Record<string, Record<string, string>>) => void;
   private _onPreviewStart: () => void;
+  private _isUpdating = false;
 
   private constructor(
     panel: vscode.WebviewPanel,
@@ -23,7 +24,6 @@ export class SettingsPanel {
 
     this._panel.webview.onDidReceiveMessage(
       async (message) => {
-        console.log('Solar Theme: Received message', message.command, message);
         switch (message.command) {
           case 'colorsChanged':
             this._onColorsChanged(message.colors);
@@ -35,9 +35,6 @@ export class SettingsPanel {
             this._resetColors();
             break;
           case 'previewPhase':
-            console.log('Solar Theme: Preview phase', message.phase, message.colors);
-            // Show immediate feedback
-            vscode.window.setStatusBarMessage(`🎨 Previewing: ${message.phase}`, 2000);
             await this._previewPhase(message.phase, message.colors);
             break;
           case 'intensityChanged':
@@ -99,12 +96,8 @@ export class SettingsPanel {
   }
 
   private async _previewPhase(phase: string, colors: { bg: string; fg: string; accent: string }) {
-    console.log('Solar Theme: _previewPhase called', phase, colors);
-    
     // Check if colors are valid
     if (!colors || !colors.bg || !colors.fg || !colors.accent) {
-      console.error('Solar Theme: Invalid colors received', colors);
-      vscode.window.showErrorMessage('Solar Theme: Invalid colors');
       return;
     }
     
@@ -113,13 +106,46 @@ export class SettingsPanel {
       this._onPreviewStart();
     }
     
-    // Use the command to apply colors (goes through extension.ts)
+    // Skip if already updating
+    if (this._isUpdating) {
+      return;
+    }
+    this._isUpdating = true;
+    
+    const colorCustomizations: Record<string, string> = {
+      'editor.background': colors.bg,
+      'editor.foreground': colors.fg,
+      'sideBar.background': colors.bg,
+      'sideBar.foreground': colors.fg,
+      'activityBar.background': colors.bg,
+      'activityBar.foreground': colors.fg,
+      'statusBar.background': colors.accent,
+      'statusBar.foreground': '#ffffff',
+      'titleBar.activeBackground': colors.bg,
+      'titleBar.activeForeground': colors.fg,
+      'tab.activeBackground': colors.bg,
+      'tab.inactiveBackground': colors.bg,
+      'tab.activeForeground': colors.fg,
+      'terminal.background': colors.bg,
+      'panel.background': colors.bg,
+      'editorGroupHeader.tabsBackground': colors.bg,
+      'focusBorder': colors.accent,
+      'button.background': colors.accent,
+      'button.foreground': '#ffffff',
+      'badge.background': colors.accent,
+      'badge.foreground': '#ffffff',
+    };
+    
     try {
-      await vscode.commands.executeCommand('solarTheme.applyPreviewColors', colors);
-      console.log('Solar Theme: Preview command executed');
-    } catch (err) {
-      console.error('Solar Theme: Failed to execute preview command', err);
-      vscode.window.showErrorMessage(`Solar Theme: ${err}`);
+      await vscode.workspace.getConfiguration('workbench').update(
+        'colorCustomizations',
+        colorCustomizations,
+        vscode.ConfigurationTarget.Global
+      );
+    } catch {
+      // Silent fail
+    } finally {
+      this._isUpdating = false;
     }
   }
 
@@ -489,13 +515,14 @@ export class SettingsPanel {
   <div class="intensity-container">
     <div class="intensity-header">
       <span class="intensity-label">🎨 Color Intensity</span>
-      <span class="intensity-value" id="intensityValue">0%</span>
+      <span class="intensity-value" id="intensityValue">50%</span>
     </div>
-    <div class="intensity-description">Adjust the vibrancy of colors (0% = muted, 50% = balanced)</div>
-    <input type="range" class="intensity-slider" id="intensitySlider" min="0" max="50" value="0">
+    <div class="intensity-description">Adjust vibrancy: left = muted/subtle, right = vivid/saturated</div>
+    <input type="range" class="intensity-slider" id="intensitySlider" min="0" max="100" value="50">
     <div class="intensity-scale">
       <span>Muted</span>
       <span>Balanced</span>
+      <span>Vivid</span>
     </div>
   </div>
 
@@ -539,22 +566,22 @@ export class SettingsPanel {
     ];
 
     const defaultPalettes = {
-      night: { bg: '#101214', fg: '#a1a7b3', accent: '#4b5563' },
-      preDawn: { bg: '#110f14', fg: '#a8a3b0', accent: '#5b5270' },
-      dawn: { bg: '#141210', fg: '#b0a89a', accent: '#6b5c4a' },
-      sunrise: { bg: '#151311', fg: '#b3aa9c', accent: '#70604e' },
-      morning: { bg: '#141312', fg: '#afa89e', accent: '#605850' },
-      midday: { bg: '#131313', fg: '#a8a8a8', accent: '#585858' },
-      afternoon: { bg: '#121314', fg: '#a5a8ac', accent: '#545860' },
-      goldenHour: { bg: '#141211', fg: '#b0a69a', accent: '#685850' },
-      sunset: { bg: '#131114', fg: '#aca6b0', accent: '#605560' },
-      dusk: { bg: '#111014', fg: '#a6a3b0', accent: '#555060' },
+      night: { bg: '#1a1d24', fg: '#c0c5ce', accent: '#4a5568' },
+      preDawn: { bg: '#1c1a24', fg: '#c0c5ce', accent: '#5a5170' },
+      dawn: { bg: '#211e1a', fg: '#c0c5ce', accent: '#8b7355' },
+      sunrise: { bg: '#232019', fg: '#c0c5ce', accent: '#9a8560' },
+      morning: { bg: '#201f1c', fg: '#c0c5ce', accent: '#6b6560' },
+      midday: { bg: '#1e1e1e', fg: '#c0c5ce', accent: '#606060' },
+      afternoon: { bg: '#1b1d20', fg: '#c0c5ce', accent: '#556070' },
+      goldenHour: { bg: '#241f18', fg: '#c0c5ce', accent: '#a08050' },
+      sunset: { bg: '#221a1e', fg: '#c0c5ce', accent: '#8a6070' },
+      dusk: { bg: '#1e1a24', fg: '#c0c5ce', accent: '#705880' },
     };
 
     let currentPalettes = JSON.parse(JSON.stringify(defaultPalettes));
     let basePalettes = JSON.parse(JSON.stringify(defaultPalettes));
     let selectedPhase = null;
-    let intensity = 0;
+    let intensity = 50;
 
     // Color manipulation functions
     function hexToHsl(hex) {
@@ -594,9 +621,10 @@ export class SettingsPanel {
 
     function adjustIntensity(hex, intensityPercent) {
       const hsl = hexToHsl(hex);
-      // Increase saturation based on intensity (max 50% increase)
-      const satBoost = intensityPercent * 0.5;
-      const newSat = Math.min(100, hsl.s + satBoost);
+      // 25% = no change, 0% = muted, 50% = +20% vivid, 100% = very vivid
+      // Shifted so middle (50%) is more vivid by default
+      const satAdjust = (intensityPercent - 25) * 0.8; // -20% to +60% saturation shift
+      const newSat = Math.max(0, Math.min(100, hsl.s + satAdjust));
       return hslToHex(hsl.h, newSat, hsl.l);
     }
 
@@ -780,27 +808,68 @@ export class SettingsPanel {
     });
 
     // Time preview slider
-    const timePhases = [
-      { start: 0, end: 300, id: 'night' },      // 12AM - 5AM
-      { start: 300, end: 360, id: 'preDawn' },  // 5AM - 6AM
-      { start: 360, end: 390, id: 'dawn' },     // 6AM - 6:30AM
-      { start: 390, end: 480, id: 'sunrise' },  // 6:30AM - 8AM
-      { start: 480, end: 660, id: 'morning' },  // 8AM - 11AM
-      { start: 660, end: 840, id: 'midday' },   // 11AM - 2PM
-      { start: 840, end: 1020, id: 'afternoon' }, // 2PM - 5PM
-      { start: 1020, end: 1080, id: 'goldenHour' }, // 5PM - 6PM
-      { start: 1080, end: 1140, id: 'sunset' }, // 6PM - 7PM
-      { start: 1140, end: 1200, id: 'dusk' },   // 7PM - 8PM
-      { start: 1200, end: 1440, id: 'night' },  // 8PM - 12AM
+    // Time phases with times in minutes for interpolation
+    const timePhasesList = [
+      { time: 0, id: 'night' },      // 12AM
+      { time: 240, id: 'night' },    // 4AM
+      { time: 300, id: 'preDawn' },  // 5AM
+      { time: 360, id: 'dawn' },     // 6AM
+      { time: 390, id: 'sunrise' },  // 6:30AM
+      { time: 480, id: 'morning' },  // 8AM
+      { time: 660, id: 'midday' },   // 11AM
+      { time: 780, id: 'midday' },   // 1PM
+      { time: 900, id: 'afternoon' },// 3PM
+      { time: 1020, id: 'goldenHour' }, // 5PM
+      { time: 1080, id: 'sunset' },  // 6PM
+      { time: 1140, id: 'dusk' },    // 7PM
+      { time: 1200, id: 'night' },   // 8PM
+      { time: 1440, id: 'night' },   // 12AM
     ];
 
-    function getPhaseForTime(minutes) {
-      for (const phase of timePhases) {
-        if (minutes >= phase.start && minutes < phase.end) {
-          return phase.id;
+    // Lerp between two hex colors
+    function lerpColor(color1, color2, t) {
+      const c1 = {
+        r: parseInt(color1.slice(1, 3), 16),
+        g: parseInt(color1.slice(3, 5), 16),
+        b: parseInt(color1.slice(5, 7), 16)
+      };
+      const c2 = {
+        r: parseInt(color2.slice(1, 3), 16),
+        g: parseInt(color2.slice(3, 5), 16),
+        b: parseInt(color2.slice(5, 7), 16)
+      };
+      const r = Math.round(c1.r + (c2.r - c1.r) * t);
+      const g = Math.round(c1.g + (c2.g - c1.g) * t);
+      const b = Math.round(c1.b + (c2.b - c1.b) * t);
+      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Get interpolated palette for a given time in minutes
+    function getInterpolatedPalette(minutes) {
+      let prevPhase = timePhasesList[0];
+      let nextPhase = timePhasesList[1];
+      
+      for (let i = 0; i < timePhasesList.length - 1; i++) {
+        if (minutes >= timePhasesList[i].time && minutes < timePhasesList[i + 1].time) {
+          prevPhase = timePhasesList[i];
+          nextPhase = timePhasesList[i + 1];
+          break;
         }
       }
-      return 'night';
+      
+      // Calculate interpolation factor
+      const range = nextPhase.time - prevPhase.time;
+      const t = range > 0 ? (minutes - prevPhase.time) / range : 0;
+      
+      const palette1 = currentPalettes[prevPhase.id];
+      const palette2 = currentPalettes[nextPhase.id];
+      
+      return {
+        bg: lerpColor(palette1.bg, palette2.bg, t),
+        fg: lerpColor(palette1.fg, palette2.fg, t),
+        accent: lerpColor(palette1.accent, palette2.accent, t),
+        currentPhase: t < 0.5 ? prevPhase.id : nextPhase.id
+      };
     }
 
     function formatTime(minutes) {
@@ -822,28 +891,28 @@ export class SettingsPanel {
 
     document.getElementById('timeSlider').addEventListener('input', (e) => {
       const minutes = parseInt(e.target.value);
-      const phaseId = getPhaseForTime(minutes);
-      const emoji = getPhaseEmoji(phaseId);
-      console.log('Time slider moved, minutes:', minutes, 'phase:', phaseId);
+      const interpolated = getInterpolatedPalette(minutes);
+      const emoji = getPhaseEmoji(interpolated.currentPhase);
       document.getElementById('timeValue').textContent = emoji + ' ' + formatTime(minutes);
       
       // Highlight the current phase card
       document.querySelectorAll('.phase-card').forEach(card => {
         card.classList.remove('selected');
-        if (card.dataset.phase === phaseId) {
+        if (card.dataset.phase === interpolated.currentPhase) {
           card.classList.add('selected');
         }
       });
 
-      // Send preview to editor
-      const palette = currentPalettes[phaseId];
-      console.log('Time slider sending palette:', palette);
+      // Send interpolated preview to editor
       vscode.postMessage({
         command: 'previewPhase',
-        phase: phaseId,
-        colors: palette
+        phase: interpolated.currentPhase,
+        colors: {
+          bg: interpolated.bg,
+          fg: interpolated.fg,
+          accent: interpolated.accent
+        }
       });
-      console.log('Time slider message sent');
     });
 
     // Initial render

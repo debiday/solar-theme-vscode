@@ -1,162 +1,83 @@
 # ☀️ Solar Theme
 
-> **Dynamically change your VS Code/Cursor theme from sunrise to sunset**
+> **A dynamic VS Code/Cursor theme that shifts colors from sunrise to sunset**
 
-Solar Theme automatically switches your editor's color theme based on the sun's position at your location. Wake up to a gentle light theme, work through the day, and transition to a dark theme as the sun sets.
+Solar Theme smoothly transitions your editor's colors throughout the day based on the sun's position at your location. Warm amber mornings, bright afternoons, golden evenings, and deep indigo nights—all automatic.
 
 ![Solar Theme Demo](images/demo.gif)
 
 ## ✨ Features
 
-- 🌅 **Automatic theme switching** based on real sunrise/sunset times
-- 📍 **Location-based** - uses your latitude/longitude for accurate sun times
-- 🌇 **Optional dawn/dusk themes** - add intermediate themes for golden hour
-- ⚡ **Lightweight** - minimal CPU usage with configurable update intervals
-- 🔔 **Optional notifications** - get notified when themes change
-- 📊 **Status bar indicator** - shows current sun phase at a glance
+- 🎨 **Dynamic color transitions** - editor background, sidebar, terminal, and UI shift smoothly
+- 📍 **Auto-detects location** - uses IP geolocation on first run, or set manually
+- ⚙️ **Settings panel** - preview any time of day and adjust color intensity
+- 🌈 **Cohesive syntax theme** - muted, earthy tones that work across all phases
+- 📊 **Status bar** - shows current sun phase at a glance
 
 ## 📦 Installation
-
-### From VS Code Marketplace
-
-1. Open VS Code/Cursor
-2. Go to Extensions (`Cmd+Shift+X` / `Ctrl+Shift+X`)
-3. Search for "Solar Theme"
-4. Click Install
 
 ### Manual Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/yourusername/solar-theme-vscode.git
 cd solar-theme-vscode
-
-# Install dependencies
 npm install
-
-# Compile
 npm run compile
-
-# Package the extension
-npm run package
-
-# Install the .vsix file
+npx vsce package --no-dependencies
 code --install-extension solar-theme-0.1.0.vsix
 ```
 
-## ⚙️ Configuration
+## 🚀 Quick Start
 
-Open Settings (`Cmd+,` / `Ctrl+,`) and search for "Solar Theme":
+1. Install the extension
+2. Your location is auto-detected on first run (you'll see a notification)
+3. Open Command Palette → **Solar Theme: Open Color Settings Panel** to preview and customize
+
+## ⚙️ Configuration
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `solarTheme.enabled` | `true` | Enable/disable automatic theme switching |
-| `solarTheme.latitude` | `40.7128` | Your latitude (NYC default) |
-| `solarTheme.longitude` | `-74.006` | Your longitude (NYC default) |
-| `solarTheme.dayTheme` | `Default Light Modern` | Theme to use during daytime |
-| `solarTheme.nightTheme` | `Default Dark Modern` | Theme to use at night |
-| `solarTheme.dawnTheme` | `""` | Optional theme for dawn (before sunrise) |
-| `solarTheme.duskTheme` | `""` | Optional theme for dusk (after sunset) |
-| `solarTheme.dawnDurationMinutes` | `30` | How long before sunrise to start dawn |
-| `solarTheme.duskDurationMinutes` | `60` | How long after sunset for dusk (golden hour) |
-| `solarTheme.updateIntervalSeconds` | `60` | How often to check for theme updates |
-| `solarTheme.showNotifications` | `false` | Show notification when theme changes |
+| `solarTheme.enabled` | `true` | Enable/disable automatic color updates |
+| `solarTheme.latitude` | `30.35` | Your latitude |
+| `solarTheme.longitude` | `-97.74` | Your longitude |
+| `solarTheme.intensity` | `100` | Color intensity (0 = muted, 100 = vivid) |
+| `solarTheme.updateIntervalSeconds` | `5` | Update frequency in seconds |
 
-### Finding Your Coordinates
+### Location
 
-1. Go to [Google Maps](https://maps.google.com)
-2. Right-click on your location
-3. Click the coordinates to copy them
-4. Paste into settings (latitude first, then longitude)
+**Auto-detection**: On first run, your location is detected via IP geolocation (~city accuracy).
 
-Example for San Francisco:
-```json
-{
-  "solarTheme.latitude": 37.7749,
-  "solarTheme.longitude": -122.4194
-}
-```
-
-### Example Configuration
-
-```json
-{
-  "solarTheme.enabled": true,
-  "solarTheme.latitude": 51.5074,
-  "solarTheme.longitude": -0.1278,
-  "solarTheme.dayTheme": "Solarized Light",
-  "solarTheme.nightTheme": "One Dark Pro",
-  "solarTheme.dawnTheme": "Quiet Light",
-  "solarTheme.duskTheme": "Dracula Soft",
-  "solarTheme.showNotifications": true
-}
-```
-
-## 🎨 Recommended Theme Combinations
-
-### Gentle Transition
-- **Dawn**: Quiet Light
-- **Day**: GitHub Light
-- **Dusk**: Dracula Soft
-- **Night**: One Dark Pro
-
-### High Contrast
-- **Day**: Default Light+
-- **Night**: Default Dark+
-
-### Solarized Flow
-- **Day**: Solarized Light
-- **Night**: Solarized Dark
-
-### Cozy Developer
-- **Dawn**: Ayu Light
-- **Day**: Atom One Light
-- **Dusk**: Tokyo Night Storm
-- **Night**: Tokyo Night
+**Manual override**: For exact coordinates, go to [Google Maps](https://maps.google.com), right-click your location, and copy the coordinates.
 
 ## 🖥️ Commands
 
-Access these commands via the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`):
-
 | Command | Description |
 |---------|-------------|
-| `Solar Theme: Update Theme Now` | Force an immediate theme update |
-| `Solar Theme: Show Sunrise/Sunset Times` | Display sun times and current status |
+| `Solar Theme: Open Color Settings Panel` | Preview times and adjust settings |
+| `Solar Theme: Update Theme Now` | Force immediate color update |
+| `Solar Theme: Show Sunrise/Sunset Times` | Display sun times for your location |
 | `Solar Theme: Toggle Enabled` | Enable/disable the extension |
+| `Solar Theme: Reset Colors to Default` | Reset to current time-based colors |
 
-## 📊 Status Bar
+## 🌅 Time Phases
 
-The status bar shows the current sun phase:
-- 🌅 Dawn (before sunrise)
-- ☀️ Day (sunrise to sunset)
-- 🌇 Dusk (after sunset, golden hour)
-- 🌙 Night (after dusk)
-
-Click on it to see detailed sun times for your location.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+| Phase | Time | Colors |
+|-------|------|--------|
+| 🌅 Dawn | Before sunrise | Warm amber, soft orange |
+| ☀️ Morning | Sunrise to noon | Bright warm tones |
+| 🌤️ Afternoon | Noon to sunset | Neutral, balanced |
+| 🌇 Golden Hour | Around sunset | Golden, warm |
+| 🌆 Dusk | After sunset | Purple, magenta |
+| 🌙 Night | After dusk | Deep indigo, blue |
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE)
 
 ## 🙏 Acknowledgments
 
 - [SunCalc](https://github.com/mourner/suncalc) - Sun position calculations
-- Inspired by f.lux and macOS/Windows auto dark mode
 
 ---
 
-**Enjoy coding with the rhythm of the sun! 🌞🌙**
-
-
-
-
+**Code with the rhythm of the sun 🌞🌙**

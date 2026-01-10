@@ -18,3 +18,4 @@ All notable changes to the "Solar Theme" extension will be documented in this fi
 
 
 
+
