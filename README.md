@@ -1,8 +1,8 @@
 # Solar Theme
 
-A VS Code/Cursor theme that shifts colors throughout the day based on sunrise and sunset at your location.
+A dynamic dark theme that shifts colors throughout the day based on sunrise and sunset at your location. Optimized for [Cursor](https://cursor.com).
 
-![Solar Theme Demo](images/demo.gif)
+![Solar Theme Demo](https://raw.githubusercontent.com/debiday/solar-theme-vscode/main/images/demo.gif)
 
 ---
 

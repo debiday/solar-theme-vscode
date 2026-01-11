@@ -1,9 +1,10 @@
 {
   "name": "solar-theme",
   "displayName": "Solar Theme",
-  "description": "Dark theme that shifts colors throughout the day based on actual sunrise/sunset at your location",
-  "version": "0.1.0",
+  "description": "Dark theme that shifts colors with the sun. Optimized for Cursor.",
+  "version": "0.1.3",
   "publisher": "debiday",
+  "icon": "images/sun-moon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/debiday/solar-theme-vscode"
