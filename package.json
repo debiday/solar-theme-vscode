@@ -1,12 +1,12 @@
 {
   "name": "solar-theme",
   "displayName": "Solar Theme",
-  "description": "Smooth ombre color gradient that transitions from sunrise orange to sunset purple throughout the day",
+  "description": "Dark theme that shifts colors throughout the day based on actual sunrise/sunset at your location",
   "version": "0.1.0",
-  "publisher": "your-publisher-name",
+  "publisher": "debiday",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/solar-theme-vscode"
+    "url": "https://github.com/debiday/solar-theme-vscode"
   },
   "engines": {
     "vscode": "^1.74.0"

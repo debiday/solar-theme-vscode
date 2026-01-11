@@ -1,83 +1,76 @@
-# ☀️ Solar Theme
+# Solar Theme
 
-> **A dynamic VS Code/Cursor theme that shifts colors from sunrise to sunset**
-
-Solar Theme smoothly transitions your editor's colors throughout the day based on the sun's position at your location. Warm amber mornings, bright afternoons, golden evenings, and deep indigo nights—all automatic.
+A VS Code/Cursor theme that shifts colors throughout the day based on sunrise and sunset at your location.
 
 ![Solar Theme Demo](images/demo.gif)
 
-## ✨ Features
+---
 
-- 🎨 **Dynamic color transitions** - editor background, sidebar, terminal, and UI shift smoothly
-- 📍 **Auto-detects location** - uses IP geolocation on first run, or set manually
-- ⚙️ **Settings panel** - preview any time of day and adjust color intensity
-- 🌈 **Cohesive syntax theme** - muted, earthy tones that work across all phases
-- 📊 **Status bar** - shows current sun phase at a glance
+## How it works
 
-## 📦 Installation
-
-### Manual Installation
-
-```bash
-git clone https://github.com/yourusername/solar-theme-vscode.git
-cd solar-theme-vscode
-npm install
-npm run compile
-npx vsce package --no-dependencies
-code --install-extension solar-theme-0.1.0.vsix
-```
-
-## 🚀 Quick Start
-
-1. Install the extension
-2. Your location is auto-detected on first run (you'll see a notification)
-3. Open Command Palette → **Solar Theme: Open Color Settings Panel** to preview and customize
-
-## ⚙️ Configuration
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `solarTheme.enabled` | `true` | Enable/disable automatic color updates |
-| `solarTheme.latitude` | `30.35` | Your latitude |
-| `solarTheme.longitude` | `-97.74` | Your longitude |
-| `solarTheme.intensity` | `100` | Color intensity (0 = muted, 100 = vivid) |
-| `solarTheme.updateIntervalSeconds` | `5` | Update frequency in seconds |
-
-### Location
-
-**Auto-detection**: On first run, your location is detected via IP geolocation (~city accuracy).
-
-**Manual override**: For exact coordinates, go to [Google Maps](https://maps.google.com), right-click your location, and copy the coordinates.
-
-## 🖥️ Commands
-
-| Command | Description |
-|---------|-------------|
-| `Solar Theme: Open Color Settings Panel` | Preview times and adjust settings |
-| `Solar Theme: Update Theme Now` | Force immediate color update |
-| `Solar Theme: Show Sunrise/Sunset Times` | Display sun times for your location |
-| `Solar Theme: Toggle Enabled` | Enable/disable the extension |
-| `Solar Theme: Reset Colors to Default` | Reset to current time-based colors |
-
-## 🌅 Time Phases
-
-| Phase | Time | Colors |
-|-------|------|--------|
-| 🌅 Dawn | Before sunrise | Warm amber, soft orange |
-| ☀️ Morning | Sunrise to noon | Bright warm tones |
-| 🌤️ Afternoon | Noon to sunset | Neutral, balanced |
-| 🌇 Golden Hour | Around sunset | Golden, warm |
-| 🌆 Dusk | After sunset | Purple, magenta |
-| 🌙 Night | After dusk | Deep indigo, blue |
-
-## 📝 License
-
-MIT License - see [LICENSE](LICENSE)
-
-## 🙏 Acknowledgments
-
-- [SunCalc](https://github.com/mourner/suncalc) - Sun position calculations
+- Uses [SunCalc](https://github.com/mourner/suncalc) to get actual sun times for your coordinates
+- Interpolates smoothly between 10 phases (dawn, morning, midday, golden hour, dusk, night, etc.)
+- Stays dark mode throughout — just the temperature shifts (warm tones during golden hour, cool slate at night)
+- Auto-detects your location on first run
 
 ---
 
-**Code with the rhythm of the sun 🌞🌙**
+## Install
+
+### Marketplace
+```
+ext install debiday.solar-theme
+```
+
+### Manual
+```bash
+git clone https://github.com/debiday/solar-theme-vscode.git
+cd solar-theme-vscode
+npm install && npm run package
+code --install-extension solar-theme-*.vsix
+```
+
+---
+
+## Settings
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `solarTheme.enabled` | `true` | Enable/disable |
+| `solarTheme.latitude` | *auto* | Your latitude |
+| `solarTheme.longitude` | *auto* | Your longitude |
+| `solarTheme.intensity` | `100` | Color intensity (0–100) |
+| `solarTheme.updateIntervalSeconds` | `5` | Update frequency |
+
+To set location manually: right-click on [Google Maps](https://maps.google.com) → copy coordinates.
+
+---
+
+## Commands
+
+- `Solar Theme: Open Color Settings Panel` — preview any time of day
+- `Solar Theme: Show Sunrise/Sunset Times` — see today's sun times
+- `Solar Theme: Update Theme Now` — force refresh
+- `Solar Theme: Toggle Enabled` — on/off
+- `Solar Theme: Reset Colors` — reset to current time
+
+---
+
+## Phases
+
+| Phase | Description |
+|-------|-------------|
+| 🌙 Night | Deep slate blue |
+| 🌌 Pre-dawn | Soft lavender |
+| 🌅 Dawn | Warm peach |
+| 🌄 Sunrise | Golden cream |
+| ☀️ Morning | Warm neutral |
+| 🌞 Midday | Pure neutral |
+| ⛅ Afternoon | Cool steel |
+| 🌇 Golden Hour | Amber glow |
+| 🌆 Sunset | Coral rose |
+| 🌃 Dusk | Soft violet |
+
+---
+
+MIT License
