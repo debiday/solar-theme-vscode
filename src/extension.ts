@@ -607,7 +607,7 @@ async function updateColors(force: boolean): Promise<void> {
   const palette = getCurrentPalette(config);
 
   // Update status bar
-  statusBarItem.text = `${emoji} Solar`;
+  statusBarItem.text = `${emoji}`;
   statusBarItem.tooltip = `Solar Theme: ${phase}\nClick for details`;
   statusBarItem.show();
 
@@ -1066,22 +1066,16 @@ async function showSunTimes(): Promise<void> {
   const formatTime = (date: Date) =>
     date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 
-  const message = `
-🌅 ${formatTime(times.sunrise)}  →  🌆 ${formatTime(times.sunset)}
-
-Open the Settings Panel to preview colors, customize phases, and scrub through the day!
-  `.trim();
-
   const result = await vscode.window.showInformationMessage(
-    `${emoji} ${phase.charAt(0).toUpperCase() + phase.slice(1)}`,
-    { modal: true, detail: message },
-    '✨ Open Settings',
-    'Reset Colors'
+    `${phase.charAt(0).toUpperCase() + phase.slice(1)}`,
+    { modal: true, detail: `☀️ ${formatTime(times.sunrise)}  ·  🌙 ${formatTime(times.sunset)}` },
+    'Customize',
+    'Reset'
   );
 
-  if (result === '✨ Open Settings') {
+  if (result === 'Customize') {
     vscode.commands.executeCommand('solarTheme.openSettings');
-  } else if (result === 'Reset Colors') {
+  } else if (result === 'Reset') {
     resetColors();
   }
 }
