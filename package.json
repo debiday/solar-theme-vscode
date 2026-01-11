@@ -2,7 +2,7 @@
   "name": "solar-theme",
   "displayName": "Solar Theme",
   "description": "Dark theme that shifts colors with the sun. Optimized for Cursor.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "publisher": "debiday",
   "icon": "images/sun-moon.png",
   "repository": {
